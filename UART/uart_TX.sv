@@ -64,7 +64,7 @@ module uart_TX #(
                 if (clkCount < CLKS_PER_BIT - 1) clkCount <= clkCount + 1;
                 else begin
                     clkCount <= '0;
-                    mainSM   <= idle;
+                    mainSM   <= IDLE;
                     doneTX   <= 1'b1;
                     activeTX <= 1'b0;
                 end
