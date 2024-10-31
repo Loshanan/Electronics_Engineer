@@ -4,11 +4,18 @@ module uart_tb ();
 
     localparam CLK_PERIOD = 100;
 
-    logic clk;
+    logic clkTX;
+    logic clkRX;
 
     initial begin
-        clk <= 0;
-        forever #(CLK_PERIOD/2) clk <= ~clk;
+        clkTX <= 0;
+        forever #(CLK_PERIOD/2) clkTX <= ~clkTX;
+    end
+
+    initial begin
+        #(CLK_PERIOD/2)
+        clkRX <= 0;
+        forever #(CLK_PERIOD/2) clkRX <= ~clkRX;
     end
 
     logic [7:0] dataIn;
@@ -25,7 +32,7 @@ module uart_tb ();
     localparam CLKS_PER_BIT = 87;
 
     uart_TX #(.CLKS_PER_BIT(CLKS_PER_BIT)) dutTX (
-        .clk(clk),
+        .clk(clkTX),
         .dataTX(dataIn),
         .dataTXValid(dataInReady),
         .serialTX(serial),
@@ -35,22 +42,19 @@ module uart_tb ();
 
     uart_RX #(.CLKS_PER_BIT(CLKS_PER_BIT)) dutRX (
         .serial(serial),
-        .clk(clk),
+        .clk(clkRX),
         .dataRX(dataOut),
         .dataRXValid(dataOutReady)
     );
 
     initial begin
-        @(posedge clk);
         #200;
         dataIn = 8'b01010101;
         #50;
-        @(posedge clk);
         dataInReady = 1;
         #(CLK_PERIOD);
         dataInReady = 0;
         #(15 * CLKS_PER_BIT *CLK_PERIOD);
-        @(posedge clk);
         if (dataOut == 8'b01010101)
             $display("Test Passed - Correct Byte received.");
         else
