@@ -5,7 +5,7 @@ entity carry_lookahead_adder_tb is
 end entity;
 
 architecture behave of carry_lookahead_adder_tb is
-    constant c_WIDTH : natural := 4;
+    constant c_WIDTH : natural := 8;
     
     signal r_TERM1  : std_logic_vector(c_WIDTH - 1 downto 0) := (others => '0');
     signal r_TERM2  : std_logic_vector(c_WIDTH - 1 downto 0) := (others => '0');
@@ -35,18 +35,17 @@ begin
 
     process is 
     begin
-        r_TERM1 <= "0101";
-        r_TERM2 <= "1010";
+        r_TERM1 <= X"55";
+        r_TERM2 <= X"32";
         wait for 10 ns;
-        -- assert w_result = "01111" report "wrong output" severity failure;
-        r_TERM1 <= "1100";
-        r_TERM2 <= "1110";
+        r_TERM1 <= X"07";
+        r_TERM2 <= X"a1";
         wait for 10 ns;
-        r_TERM1 <= "0111";
-        r_TERM2 <= "0000";
+        r_TERM1 <= X"13";
+        r_TERM2 <= X"00";
         wait for 10 ns;
-        r_TERM1 <= "1111";
-        r_TERM2 <= "1111";
+        r_TERM1 <= X"ff";
+        r_TERM2 <= X"ff";
         wait for 10 ns;
         wait;        
     end process;
